@@ -1,6 +1,7 @@
 module Main where
 
 import Options.Applicative
+import Language.Dockerfile
 
 data Args = Args [FilePath] deriving (Show)
 
@@ -12,5 +13,6 @@ filepath = str
 
 main :: IO ()
 main = do
-  Args fps <- execParser (info (argsParser <**> helper) idm)
-  putStrLn $ unlines fps
+  Args filepaths <- execParser (info (argsParser <**> helper) idm)
+  dockerfiles <- mapM parseFile filepaths
+  print dockerfiles
