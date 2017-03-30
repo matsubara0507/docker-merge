@@ -1,2 +1,2 @@
 # docker-merge
-make CLI that two merge Dockerfile using Haskell
+make CLI that merge two Dockerfile using Haskell
