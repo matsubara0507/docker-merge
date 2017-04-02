@@ -4,6 +4,9 @@ MAINTAINER MATSUBARA Nobutada
 
 WORKDIR ~
 
+# Install Haskell
+## with stack
+
 RUN echo 'deb http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' > /etc/apt/sources.list.d/ghc.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286 \
     && apt-get update && apt-get install -y --no-install-recommends \

@@ -4,6 +4,9 @@ MAINTAINER MATSUBARA Nobutada
 
 WORKDIR ~
 
+# install Ruby
+## use rbenv
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     gcc \
