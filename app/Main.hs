@@ -30,22 +30,17 @@ mergeDockerfiles xs@(x:xs') ys@(y:ys')
   | x == y = x : mergeDockerfiles xs' ys'
   | otherwise = xs `mappend` ys
 
-printDockerfile :: Dockerfile -> String
-printDockerfile dockerfile = unlines $ (filename `mappend` ":") : instructions
+merge :: [Dockerfile] -> Dockerfile
+merge = toDockerfile . foldl mergeDockerfiles [] . fromDockerfile
   where
-    filename = fromMaybe "" . getFileName $ dockerfile
-    instructions = fmap show . removeEOL . toInstructions $ dockerfile
+    toDockerfile = fmap instructionPos
+    fromDockerfile = fmap (removeEOL . toInstructions)
 
 main :: IO ()
 main = do
   Args filepaths <- execParser (info (argsParser <**> helper) idm)
   dockerfiles <- mapM parseFile filepaths
 
-  putStrLn "== can read =="
-  putStrLn . unlines . fmap printDockerfile $ rights dockerfiles
-
-  putStrLn "== merge =="
-  putStrLn . unlines . fmap show . foldl mergeDockerfiles [] . fmap (removeEOL . toInstructions) $ rights dockerfiles
-
-  putStrLn "== can't read =="
-  print $ lefts dockerfiles
+  case lefts dockerfiles of
+    [] -> putStrLn . prettyPrint . merge $ rights dockerfiles
+    es -> putStrLn $ "error: " `mappend` show es
